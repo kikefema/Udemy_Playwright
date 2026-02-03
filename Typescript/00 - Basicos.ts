@@ -1,3 +1,4 @@
+// Introducción a TypeScript: Tipos de datos básicos y operaciones
 
 // Variables numéricas. Aceptan tanto enteros como decimales.
 let edad: number = 30;
