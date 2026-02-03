@@ -20,3 +20,4 @@ export function interpretarIMC(imc: number): string {
     if (imc < 29.9) return "Sobrepeso";
     return "Obesidad";
 }
+

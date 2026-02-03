@@ -7,3 +7,4 @@ const resultado = interpretarIMC(valorIMC);
 
 console.log(valorIMC);   // 22.86
 console.log(resultado);  // Peso normal
+
