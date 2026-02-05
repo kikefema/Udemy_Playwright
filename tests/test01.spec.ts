@@ -12,3 +12,6 @@ await page.getByRole('main').getByRole('textbox').fill('10');
 await page.getByRole('main').getByRole('textbox').press('Enter');
 await page.getByRole('button', { name: 'Entrar y realizar apuesta' }).click();  // This is a placeholder test
 });
+
+// npx playwright test tests/test01.spec.ts --headed
+

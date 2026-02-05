@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test, Browser, Page} from "@playwright/test";
 
 test('has title', async ({ page }) => {
 
@@ -19,4 +19,6 @@ await page.getByRole('button', { name: 'Submit' }).click();
 // await page.getByText('Current Address :calle lerele').click();
 // await page.getByText('Permananet Address :calle').click();
 
-});  // This is a placeholder test
+});  
+
+// npx playwright test tests/test02.spec.ts --headed
