@@ -8,7 +8,7 @@ test.describe('Acciones con elementos', () => {
 
     await test.step("Paso 1 Navegación a Demoqa", async () => {
       await page.goto('https://demoqa.com/');
-      await page.locator('.close-button').click();
+      // await page.locator('.close-button').click();
       await page.getByRole('link', { name: 'Elements' }).click();
       // await page.locator('iframe[title="3rd party ad content"]').contentFrame().getByRole('button', { name: 'Close ad' }).click();
       await page.getByRole('link', { name: 'Text Box' }).click();
