@@ -2,7 +2,16 @@
   "name": "udemy_playwright",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:headed": "playwright test --headed",
+    "test:smoke": "playwright test src/tests/smoke",
+    "test:auth": "playwright test src/tests/auth",
+    "test:features": "playwright test src/tests/features",
+    "report": "playwright show-report"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

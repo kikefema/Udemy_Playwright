@@ -1,0 +1,990 @@
+/**
+ * =====================================================
+ * TypeScript Configuration - CON COMENTARIOS COMPLETOS
+ * =====================================================
+ * 
+ * ARCHIVO: tsconfig.json
+ * 
+ * QUÉ SIGNIFICA:
+ * TypeScript Compiler Configuration
+ * 
+ * Controla CÓMO TypeScript compila tu código
+ * Define reglas de strictness
+ * Define paths para imports
+ * Define qué compilar/ignorar
+ * 
+ * IMPORTANTE:
+ * Este archivo afecta:
+ * - IDEs (VS Code)
+ * - Compiler (tsc)
+ * - Linters
+ * - Build tools
+ * 
+ * FORMATO:
+ * JSON con comentarios (//comentarios)
+ * Algunos tools no permiten comentarios
+ * Por eso aquí usamos un versión en TypeScript
+ */
+
+{
+  /**
+   * =====================================================
+   * SECCIÓN 1: compilerOptions
+   * =====================================================
+   * 
+   * Opciones del compilador TypeScript
+   * Define cómo se compila el código
+   */
+  "compilerOptions": {
+    
+    /**
+     * OPCIÓN 1: target
+     * =====================================================
+     * 
+     * "target": "ES2020"
+     * 
+     * QUÉ ES:
+     * Versión de JavaScript a compilar
+     * 
+     * CADENA DE COMPILACIÓN:
+     * 
+     * TypeScript (modern syntax)
+     *         ↓
+     * (compilador con target: ES2020)
+     *         ↓
+     * JavaScript ES2020 (compatible)
+     * 
+     * VALORES COMUNES:
+     * 
+     * "ES5"
+     * - Internet Explorer compatible
+     * - Muy viejo (2009)
+     * - Syntaxis limitada
+     * - Archivo resultante GRANDE
+     * - Velocidad: lento
+     * 
+     * "ES2015" (ES6)
+     * - Moderno (2015)
+     * - Clases, arrow functions, etc
+     * - Todavía old
+     * - Android < 5 incompatible
+     * 
+     * "ES2020"
+     * - Moderno (2020)
+     * - Nullish coalescing, optional chaining
+     * - La mayoría navegadores soportan
+     * - Archivo resultante MÁS pequeño
+     * - Velocidad: rápido
+     * - BUENA ELECCIÓN PARA PROYECTOS NUEVOS
+     * 
+     * "ES2022", "ES2023"
+     * - Muy nuevo
+     * - Algunos navegadores no soportan
+     * - Si no necesitas = no usar
+     * 
+     * PROYECTO ACTUAL:
+     * "target": "ES2020"
+     * 
+     * ANÁLISIS:
+     * ✓ Buen balance moderno/compatible
+     * ✓ Navegadores soportan
+     * ✓ Archivos compilados pequeños
+     * ✓ Syntax moderno
+     * 
+     * CUÁNDO CAMBIAR:
+     * - IE support needed → "ES5"
+     * - Old devices → "ES2015"
+     * - Muy nuevo → "ES2023"
+     * 
+     * NOTA BROWSERLIST:
+     * target !== browserslist
+     * target = para JS compilado
+     * browserslist = para polyfills/transpile
+     * 
+     * CON target ES2020:
+     * Tu código .ts:
+     * const x: string | null = null ?? 'default';
+     * 
+     * Se compila a .js:
+     * var x = null ?? 'default';
+     * (No puede compilar a ES5, necesitaría polyfill)
+     */
+    "target": "ES2020",
+
+    /**
+     * OPCIÓN 2: module
+     * =====================================================
+     * 
+     * "module": "commonjs"
+     * 
+     * QUÉ ES:
+     * Sistema de módulos para el código compilado
+     * 
+     * DIFERENCIA IMPORTANTE:
+     * import/export (TypeScript/ES6)
+     *         ↓
+     * (compilador con module: commonjs)
+     *         ↓
+     * require/module.exports (Node.js)
+     * 
+     * SISTEMAS DE MÓDULOS:
+     * 
+     * "commonjs" (Node.js)
+     * const x = require('./file.js');
+     * module.exports = { x };
+     * 
+     * ✓ Standard Node.js
+     * ✓ Todos los tools soportan
+     * ✓ npm/yarn use commonjs
+     * ✓ Playwright tests usan commonjs
+     * 
+     * "es6" / "es2015" (ECMAScript)
+     * import x from './file.js';
+     * export { x };
+     * 
+     * ✓ Moderno
+     * ✓ Browsers soportan
+     * ✗ Node.js requiere flags
+     * ✗ Algunos tools no soportan
+     * 
+     * "esnext"
+     * import/export tal cual
+     * Sin compilar
+     * ✓ Rápido
+     * ✗ Requiere bundler
+     * 
+     * PROYECTO ACTUAL:
+     * "module": "commonjs"
+     * 
+     * PORQUÉ:
+     * ✓ Node.js standard
+     * ✓ Playwright tests corren en Node
+     * ✓ npm packages esperan commonjs
+     * ✓ Compatible con todo
+     * 
+     * CUÁNDO CAMBIAR:
+     * - Browser app con bundler → "esnext"
+     * - Pure Node.js → "commonjs"
+     * - Hybrid → depende del bundler
+     * 
+     * NOTA:
+     * Playwright transpila TypeScript
+     * module setting afecta si necesitas .d.ts
+     * Generalmente no afecta tests
+     */
+    "module": "commonjs",
+
+    /**
+     * OPCIÓN 3: lib
+     * =====================================================
+     * 
+     * "lib": ["ES2020"]
+     * 
+     * QUÉ ES:
+     * Qué APIs JavaScript están disponibles
+     * Define tipos para APIs globales
+     * 
+     * EJEMPLO:
+     * 
+     * Sin "lib": ["ES2020"]
+     * ----
+     * const arr = [1, 2, 3];
+     * arr.at(-1); // ERROR: ¿Qué es at()?
+     * 
+     * Con "lib": ["ES2020"]
+     * ----
+     * const arr = [1, 2, 3];
+     * arr.at(-1); // ✓ OK, ES2020 tiene at()
+     * // Retorna 3
+     * 
+     * OPCIONES COMUNES:
+     * 
+     * "lib": ["ES2020"]
+     * - Incluye: Promise, Map, Array.at(), etc
+     * - Standard moderno
+     * - Para Node.js/Browsers modernos
+     * 
+     * "lib": ["ES2020", "DOM"]
+     * - Incluye ES2020
+     * - Incluye DOM APIs (document, window, etc)
+     * - Para browser apps
+     * 
+     * "lib": ["ES2020", "DOM", "DOM.Iterable"]
+     * - Incluye todo arriba
+     * - Incluye iterables del DOM
+     * - Para browser apps complejas
+     * 
+     * "lib": ["ES5"]
+     * - Solo APIs viejas
+     * - IE compatible
+     * - Muy limitado
+     * 
+     * PROYECTO ACTUAL:
+     * "lib": ["ES2020"]
+     * 
+     * ANÁLISIS:
+     * ✓ Tests en Node.js
+     * ✓ Node.js soporta ES2020 APIs
+     * ✓ No necesita DOM (no es browser)
+     * ✓ Correcto para Playwright tests
+     * 
+     * SI FUERA BROWSER:
+     * "lib": ["ES2020", "DOM"]
+     * Para acceder window, document, etc
+     * 
+     * NOTA:
+     * Cambiar lib NO cambia target
+     * target = compilar a qué JS version
+     * lib = qué tipos están disponibles
+     * 
+     * Ambos deben ser compatible:
+     * target: ES5 + lib: ES2020
+     * → Compiler error: API no existe en ES5
+     */
+    "lib": ["ES2020"],
+
+    /**
+     * OPCIÓN 4: outDir
+     * =====================================================
+     * 
+     * "outDir": "./dist"
+     * 
+     * QUÉ ES:
+     * Dónde escribir archivos compilados
+     * 
+     * ESTRUCTURA:
+     * 
+     * ANTES (TypeScript):
+     * src/
+     *   ├── pages/
+     *   │   └── BasePage.ts
+     *   ├── tests/
+     *   │   └── login.spec.ts
+     *   └── utils/
+     *       └── logger.ts
+     * 
+     * DESPUÉS DE COMPILAR:
+     * dist/  ← outDir: "./dist"
+     *   ├── pages/
+     *   │   └── BasePage.js
+     *   ├── tests/
+     *   │   └── login.spec.js
+     *   └── utils/
+     *       └── logger.js
+     * 
+     * ESTRUCTURA SE PRESERVA:
+     * src/pages/X.ts → dist/pages/X.js
+     * src/tests/X.ts → dist/tests/X.js
+     * 
+     * VALORES COMUNES:
+     * 
+     * "./dist"
+     * ✓ Standard de Node.js
+     * ✓ Git ignore ready
+     * ✓ npm projects esperan dist/
+     * ✓ Fácil de limpiar
+     * 
+     * "./build"
+     * ✓ Frontend convention
+     * 
+     * "./lib"
+     * ✓ Para publicar librerías
+     * 
+     * "./"
+     * ✗ Compilar en mismo lugar
+     * ✗ Mezcla .ts y .js
+     * ✗ Confuso
+     * 
+     * PROYECTO ACTUAL:
+     * "outDir": "./dist"
+     * 
+     * ANÁLISIS:
+     * ✓ Standard node.js
+     * ✓ Fácil de git ignore
+     * ✓ Proyecto limpio
+     * 
+     * NOTA IMPORTANTE:
+     * Playwright NO usa outDir
+     * Playwright transpila .ts on-the-fly
+     * outDir solo si usas tsc manualmente
+     * 
+     * CASOS DONDE IMPORTA:
+     * 1. npm run build (si existe)
+     * 2. Publicar librería (npm publish)
+     * 3. Desplegar app Node.js
+     */
+    "outDir": "./dist",
+
+    /**
+     * OPCIÓN 5: rootDir
+     * =====================================================
+     * 
+     * "rootDir": "./src"
+     * 
+     * QUÉ ES:
+     * Raíz del código fuente (TypeScript)
+     * 
+     * FUNCIÓN:
+     * Define dónde están los .ts
+     * Afecta estructura de outDir
+     * 
+     * EJEMPLO:
+     * 
+     * CON rootDir: "./src"
+     * src/
+     *   └── pages/BasePage.ts
+     * 
+     * npm run build →
+     * 
+     * dist/
+     *   └── pages/BasePage.js
+     * 
+     * (SIN el src/ prefijo en dist)
+     * 
+     * SIN rootDir (default):
+     * src/
+     *   └── pages/BasePage.ts
+     * 
+     * npm run build →
+     * 
+     * dist/
+     *   └── src/pages/BasePage.js
+     * 
+     * (INCLUYE el src/ prefijo en dist)
+     * 
+     * VALORES COMUNES:
+     * 
+     * "./src"
+     * ✓ Standard modern
+     * ✓ Estructura limpia
+     * ✓ Recomendado
+     * 
+     * "./"
+     * ✓ Si código está en raíz
+     * ✗ Más confuso
+     * 
+     * PROYECTO ACTUAL:
+     * "rootDir": "./src"
+     * 
+     * ANÁLISIS:
+     * ✓ Código en src/
+     * ✓ Build limpia
+     * ✓ Correcto
+     * 
+     * NOTA:
+     * rootDir NO afecta imports
+     * Solo afecta compilación tsc
+     * 
+     * Para imports:
+     * import { x } from './pages/X';
+     * Siempre relativo al archivo
+     */
+    "rootDir": "./src",
+
+    /**
+     * OPCIÓN 6: strict
+     * =====================================================
+     * 
+     * "strict": true
+     * 
+     * QUÉ ES:
+     * Activa TODAS las comprobaciones estrictas
+     * 
+     * SIGNIFICA:
+     * true = strict mode ON (muy exigente)
+     * false = permisivo (permite cualquier cosa)
+     * 
+     * INCLUDES (si strict: true):
+     * 
+     * 1. noImplicitAny
+     * ----
+     * function test(x) {  // ERROR: qué tipo es x?
+     * }
+     * 
+     * Con strict=true:
+     * function test(x: unknown) {  // OK, explicit
+     * }
+     * 
+     * 2. strictNullChecks
+     * ----
+     * const x: string = null;  // ERROR
+     * 
+     * const x: string | null = null;  // OK
+     * 
+     * 3. strictFunctionTypes
+     * ----
+     * Tipos de función deben ser exactos
+     * 
+     * 4. strictBindCallApply
+     * ----
+     * .bind(), .call(), .apply() son validados
+     * 
+     * 5. strictPropertyInitialization
+     * ----
+     * Propiedades de clase deben ser inicializadas
+     * 
+     * 6. noImplicitThis
+     * ----
+     * 'this' debe ser typed explícitamente
+     * 
+     * BENEFICIOS:
+     * ✓ Encuentra más bugs
+     * ✓ Código más robusto
+     * ✓ Mejor IDEs autocompletion
+     * ✓ Documentación implícita
+     * ✓ Refactoring más seguro
+     * 
+     * DESVENTAJAS:
+     * ✗ Más verbose
+     * ✗ Algunos imports difíciles
+     * ✗ Curva de aprendizaje
+     * 
+     * PROYECTO ACTUAL:
+     * "strict": true
+     * 
+     * ANÁLISIS:
+     * ✓ BEST PRACTICE
+     * ✓ Catch bugs early
+     * ✓ Production ready
+     * ✓ Recomendado para equipos
+     * ✓ Proyecto está bien protegido
+     * 
+     * COMPARACIÓN:
+     * 
+     * "strict": false
+     * const x = getUser();  // x: any
+     * x.name  // OK pero puede fallar runtime
+     * 
+     * "strict": true
+     * const x = getUser();  // ERROR: qué tipo?
+     * const x: User = getUser();  // OK
+     * x.name  // ✓ Garantizado existe
+     * 
+     * RECOMENDACIÓN:
+     * Siempre usar strict: true
+     * Especialmente en:
+     * - Equipos
+     * - Production code
+     * - Proyectos grandes
+     * - Testing
+     */
+    "strict": true,
+
+    /**
+     * OPCIÓN 7: esModuleInterop
+     * =====================================================
+     * 
+     * "esModuleInterop": true
+     * 
+     * QUÉ HACE:
+     * Permite usar ES6 imports con CommonJS
+     * 
+     * EJEMPLO:
+     * 
+     * Sin esModuleInterop:
+     * ----
+     * const lodash = require('lodash');  // CommonJS
+     * // luego...
+     * import _ from 'lodash';  // ERROR: confusión
+     * 
+     * Con esModuleInterop: true
+     * ----
+     * import _ from 'lodash';  // OK, funciona
+     * // TypeScript traduce a require() internamente
+     * 
+     * INTERNAMENTE:
+     * import _ from 'lodash';
+     *         ↓
+     * const _ = require('lodash').default || require('lodash');
+     * 
+     * VENTAJA:
+     * ✓ Puedes usar import/export
+     * ✓ Aunque module: commonjs
+     * ✓ Más moderno
+     * ✓ Mejor que require()
+     * 
+     * PROYECTO ACTUAL:
+     * "esModuleInterop": true
+     * 
+     * ANÁLISIS:
+     * ✓ Permite usar modern imports
+     * ✓ Proyecto usa import/export
+     * ✓ Correcto
+     * 
+     * NOTA:
+     * Con module: "esnext" no necesitas esto
+     * Pero con commonjs es buena práctica
+     */
+    "esModuleInterop": true,
+
+    /**
+     * OPCIÓN 8: skipLibCheck
+     * =====================================================
+     * 
+     * "skipLibCheck": true
+     * 
+     * QUÉ HACE:
+     * Salta verificación de tipos en .d.ts
+     * 
+     * EXPLICACIÓN:
+     * 
+     * Todos los @types/ tienen archivos .d.ts
+     * Los .d.ts definen tipos para librerías
+     * 
+     * "@types/node": {
+     *   "index.d.ts": Define tipos de Node.js
+     * }
+     * 
+     * Si skipLibCheck: false
+     * TypeScript verifica .d.ts también
+     * Puede encontrar bugs en tipos
+     * Pero... es MUY LENTO
+     * 
+     * Si skipLibCheck: true
+     * Salta verificación de .d.ts
+     * Asume que están bien
+     * MUCHO más rápido
+     * 
+     * VENTAJAS:
+     * ✓ Compilation más rápido (2-3x)
+     * ✓ Menos ruido de warnings
+     * ✓ .d.ts bugs no son tu problema
+     * 
+     * DESVENTAJAS:
+     * ✗ Podrías no ver algunos bugs de tipos
+     * ✗ Menos verificación
+     * 
+     * PROYECTO ACTUAL:
+     * "skipLibCheck": true
+     * 
+     * ANÁLISIS:
+     * ✓ STANDARD PRACTICE
+     * ✓ Compilation más rápido
+     * ✓ Recomendado
+     * 
+     * CUÁNDO CAMBIAR A false:
+     * - Debugging tipos específicos
+     * - Problemas raros con @types
+     * - Investigación de bugs
+     * 
+     * NOTA:
+     * Playwright internamente usa skipLibCheck
+     * Así que tu proyecto también debería
+     */
+    "skipLibCheck": true,
+
+    /**
+     * OPCIÓN 9: forceConsistentCasingInFileNames
+     * =====================================================
+     * 
+     * "forceConsistentCasingInFileNames": true
+     * 
+     * QUÉ HACE:
+     * Requiere que paths usen mismo case
+     * 
+     * PROBLEMA:
+     * En Windows/Mac: imports case-insensitive
+     * En Linux: imports case-sensitive
+     * 
+     * EJEMPLO:
+     * 
+     * Archivo: src/pages/BasePage.ts
+     * 
+     * Import (WRONG):
+     * import { BasePage } from './pages/basepage';  // minúsculas
+     * 
+     * En Windows/Mac:
+     * ✓ Funciona (case-insensitive)
+     * 
+     * En Linux (CI server):
+     * ✗ FALLA (case-sensitive)
+     * 
+     * SOLUCIÓN:
+     * forceConsistentCasingInFileNames: true
+     * → Requiere match exacto del case
+     * 
+     * Con forceConsistentCasingInFileNames: true:
+     * import { BasePage } from './pages/basepage';  // ERROR
+     * import { BasePage } from './pages/BasePage';  // OK
+     * 
+     * VENTAJAS:
+     * ✓ Evita bugs en CI
+     * ✓ Funciona en todos los OS
+     * ✓ Consiste en el código
+     * ✓ Futura-proof
+     * 
+     * PROYECTO ACTUAL:
+     * "forceConsistentCasingInFileNames": true
+     * 
+     * ANÁLISIS:
+     * ✓ ESSENTIAL
+     * ✓ Especialmente con CI
+     * ✓ Cross-platform safe
+     * ✓ Buena práctica
+     * 
+     * NOTA:
+     * Habitual en equipos
+     * Previene "works on my machine"
+     */
+    "forceConsistentCasingInFileNames": true,
+
+    /**
+     * OPCIÓN 10: resolveJsonModule
+     * =====================================================
+     * 
+     * "resolveJsonModule": true
+     * 
+     * QUÉ HACE:
+     * Permite importar archivos .json
+     * 
+     * EJEMPLO:
+     * 
+     * Sin resolveJsonModule:
+     * ----
+     * import config from './config.json';  // ERROR
+     * 
+     * Con resolveJsonModule: true:
+     * ----
+     * import config from './config.json';  // OK
+     * 
+     * INTERNAMENTE:
+     * config es objeto tipado
+     * {
+     *   "base_url": "https://...",
+     *   "timeout": 5000
+     * }
+     * 
+     * config.base_url  // ✓ TypeScript sabe tipo
+     * config.foobar    // ERROR: no existe
+     * 
+     * VENTAJAS:
+     * ✓ Centralizar config en JSON
+     * ✓ Tipado automáticamente
+     * ✓ Type-safe config
+     * 
+     * PROYECTO ACTUAL:
+     * "resolveJsonModule": true
+     * 
+     * ANÁLISIS:
+     * ✓ Proyecto podría usarlo
+     * ✓ Aunque no lo usa actualmente
+     * ✓ Buena opción si hay JSON config
+     * 
+     * NOTA:
+     * Proyecto usa env.ts para config
+     * No necesita JSON imports
+     * Pero tenerlo habilitado no daña
+     */
+    "resolveJsonModule": true,
+
+    /**
+     * OPCIÓN 11: moduleResolution
+     * =====================================================
+     * 
+     * "moduleResolution": "node"
+     * 
+     * QUÉ HACE:
+     * Define cómo resolver imports
+     * 
+     * "node" significa:
+     * Resuelve imports como Node.js lo hace
+     * 
+     * ALGORITMO "node":
+     * 
+     * import { something } from './utils';
+     * 
+     * 1. Busca ./utils/index.ts
+     * 2. Busca ./utils/index.js
+     * 3. Busca ./utils.ts
+     * 4. Busca ./utils.js
+     * 5. ERROR si no existe
+     * 
+     * IMPORTANCIA:
+     * Afecta cómo se encuentran archivos
+     * 
+     * VALORES:
+     * 
+     * "node"
+     * ✓ Standard Node.js
+     * ✓ Todos los tools
+     * ✓ Recomendado
+     * 
+     * "classic"
+     * ✗ Viejo
+     * ✗ No usar
+     * 
+     * PROYECTO ACTUAL:
+     * "moduleResolution": "node"
+     * 
+     * ANÁLISIS:
+     * ✓ STANDARD
+     * ✓ Correcto
+     * ✓ Proyecto Node.js
+     */
+    "moduleResolution": "node",
+
+    /**
+     * OPCIÓN 12: baseUrl + paths
+     * =====================================================
+     * 
+     * "baseUrl": "."
+     * "paths": {
+     *   "@pages/*": ["src/pages/*"],
+     *   "@tests/*": ["src/tests/*"],
+     *   ...
+     * }
+     * 
+     * QUÉ HACE:
+     * Path aliases para imports más limpios
+     * 
+     * PROBLEMA SIN ALIASES:
+     * 
+     * // En src/tests/auth/login.spec.ts
+     * 
+     * import { LoginPage } from '../../../pages/LoginPage';
+     * import { BasePage } from '../../../pages/BasePage';
+     * import { logger } from '../../../utils/logger';
+     * 
+     * ✗ Muchos ../../../
+     * ✗ Frágil (si mueves archivo → breaks)
+     * ✗ Difícil de leer
+     * 
+     * SOLUCIÓN CON ALIASES:
+     * 
+     * import { LoginPage } from '@pages/LoginPage';
+     * import { BasePage } from '@pages/BasePage';
+     * import { logger } from '@utils/logger';
+     * 
+     * ✓ Limpio
+     * ✓ Robusto
+     * ✓ Fácil de leer
+     * ✓ Refactoring safe
+     * 
+     * CONFIGURACIÓN:
+     * 
+     * "baseUrl": "."
+     * = Raíz del proyecto
+     * = Punto de partida para paths
+     * 
+     * "paths": {
+     *   "@pages/*": ["src/pages/*"],
+     * }
+     * 
+     * @pages/LoginPage
+     * → se resuelve a:
+     * ./src/pages/LoginPage (relativo a raíz)
+     * 
+     * TODOS LOS ALIASES:
+     * 
+     * "@pages/*" → "src/pages/*"
+     * "@tests/*" → "src/tests/*"
+     * "@fixtures/*" → "src/fixtures/*"
+     * "@utils/*" → "src/utils/*"
+     * "@config/*" → "src/config/*"
+     * "@types/*" → "src/types/*"
+     * 
+     * PROYECTO ACTUAL:
+     * 6 aliases configurados
+     * 
+     * ANÁLISIS:
+     * ✓ BEST PRACTICE
+     * ✓ Código limpio
+     * ✓ Fácil mantenimiento
+     * ✓ Industry standard
+     * 
+     * NOTA IMPORTANTE:
+     * Aliases en TypeScript
+     * + Aliases en playwright.config.ts
+     * = Todo funciona
+     * 
+     * Proyecto actual hace ambos
+     * TypeScript + Playwright aliased
+     * ✓ Correcto
+     */
+    "baseUrl": ".",
+    "paths": {
+      "@pages/*": ["src/pages/*"],
+      "@tests/*": ["src/tests/*"],
+      "@fixtures/*": ["src/fixtures/*"],
+      "@utils/*": ["src/utils/*"],
+      "@config/*": ["src/config/*"],
+      "@types/*": ["src/types/*"]
+    }
+  },
+
+  /**
+   * =====================================================
+   * SECCIÓN 2: include
+   * =====================================================
+   * 
+   * "include": ["src/**/*"]
+   * 
+   * QUÉ SIGNIFICA:
+   * Qué archivos INCLUIR en compilación
+   * 
+   * "src/**/*"
+   * = src/
+   * = /** todos los subdirectorios recursivos
+   * = /* todos los archivos
+   * 
+   * RESULTADO:
+   * Incluye TODOS los archivos en src/
+   * 
+   * ESTRUCTURA:
+   * src/
+   *   ├── pages/
+   *   │   └── BasePage.ts  ✓ INCLUIDO
+   *   ├── tests/
+   *   │   └── login.spec.ts  ✓ INCLUIDO
+   *   ├── utils/
+   *   │   └── logger.ts  ✓ INCLUIDO
+   *   └── config/
+   *       └── constants.ts  ✓ INCLUIDO
+   * 
+   * TODOS INCLUIDOS
+   * 
+   * PARÁMETROS:
+   * 
+     * "include": ["**/*.ts"]
+     * = Todos los .ts en cualquier lado
+     * = Incluye node_modules (malo)
+     * 
+     * "include": ["src/**/*.ts"]
+     * = Específico a src/
+     * = No incluye node_modules
+     * ✓ Mejor
+     * 
+     * "include": ["src/**/*", "tests/**/*"]
+     * = Múltiples directorios
+     * = src/ y tests/
+     * 
+     * PROYECTO ACTUAL:
+     * "include": ["src/**/*"]
+     * 
+     * ANÁLISIS:
+     * ✓ Correcto
+     * ✓ Incluye todo lo necesario
+     * ✓ No poluciona
+     * 
+     * NOTA:
+     * Playwright transpila .ts on-the-fly
+     * include/exclude no afecta tests
+     * Solo afecta si usas tsc manualmente
+     */
+  "include": ["src/**/*"],
+
+  /**
+   * =====================================================
+   * SECCIÓN 3: exclude
+   * =====================================================
+   * 
+   * "exclude": ["node_modules", "dist", "OLD"]
+   * 
+   * QUÉ SIGNIFICA:
+   * Qué directorios EXCLUIR de compilación
+   * 
+   * PARÁMETROS EXCLUDIDOS:
+   * 
+   * "node_modules"
+   * = No compilar dependencias
+   * ✓ Essential
+   * ✓ node_modules tiene 100k+ archivos
+   * ✓ Si lo incluyes → 5 minutos
+   * ✓ Sin esto → Dios se apiade
+   * 
+   * "dist"
+   * = No compilar output
+   * ✓ Evita círculos infinitos
+   * ✓ dist es generated, no source
+     * 
+     * "OLD"
+     * = Directorio con código viejo
+     * ✓ Esto es específico del proyecto
+     * ✓ OLD/ tiene ejemplos viejos
+     * ✓ No compilarlos
+     * 
+     * ESTRUCTURA ACTUAL:
+     * 
+     * ├── src/  ← INCLUIDO (source)
+     * ├── dist/  ← EXCLUIDO (generated)
+     * ├── OLD/  ← EXCLUIDO (old code)
+     * └── node_modules/  ← EXCLUIDO (deps)
+     * 
+     * PROYECTO ACTUAL:
+     * "exclude": ["node_modules", "dist", "OLD"]
+     * 
+     * ANÁLISIS:
+     * ✓ Correcto
+     * ✓ Excluye todo lo necesario
+     * ✓ Limpio
+     * 
+     * NOTA:
+     * exclude es "best effort"
+     * TypeScript sigue ciertas reglas
+     * Por ejemplo: siempre excluye node_modules
+     * 
+     * Pero explícitamente ayuda a la IDE
+     * VS Code no busca en node_modules
+     * Autocomplete más rápido
+     */
+  "exclude": ["node_modules", "dist", "OLD"]
+}
+
+/**
+ * =====================================================
+ * RESUMEN CONFIGURACIÓN
+ * =====================================================
+ * 
+ * TARGET & MODULE:
+ * ✓ target: ES2020 (moderno)
+ * ✓ module: commonjs (Node.js)
+ * ✓ lib: ES2020 (APIs)
+ * ✓ Combinación correcta
+ * 
+ * STRICTNESS:
+ * ✓ strict: true (exigente)
+ * ✓ Encuentra bugs
+ * ✓ Production ready
+ * 
+ * INTEROPERABILIDAD:
+ * ✓ esModuleInterop: true (moderno)
+ * ✓ forceConsistentCasing: true (cross-OS)
+ * ✓ Evita problemas
+ * 
+ * PATHS:
+ * ✓ 6 aliases configurados
+ * ✓ @pages, @tests, @utils, @config, etc
+ * ✓ Código limpio
+ * 
+ * INCLUSIONES:
+ * ✓ include: src/**/* (todo source)
+ * ✓ exclude: node_modules, dist, OLD (limpio)
+ * ✓ Estructura clara
+ * 
+ * OVERALL:
+ * ✓ BEST PRACTICE configuration
+ * ✓ Production ready
+ * ✓ Team friendly
+ * ✓ Type safe
+ * ✓ Cross-platform
+ * 
+ * RECOMENDACIONES FUTURAS:
+ * - Mantener strict: true
+ * - No bajar los estándares
+ * - Si necesitas JSON imports, está listo
+ * - Si necesitas DOM types, agregar a lib
+ * 
+ * COMANDOS:
+ * 
+ * npx tsc --noEmit
+     * = Verificar tipos sin compilar
+     * = Para CI/CD
+     * 
+     * npx tsc
+     * = Compilar con config
+     * = Genera dist/
+     * 
+     * npx tsc --watch
+     * = Watch mode
+     * = Recompila cuando cambias
+     */
